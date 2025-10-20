@@ -1,0 +1,26 @@
+<h1>Employers assigned to: <%= @task.name %></h1>
+
+<ul>
+  <% @employers.each do |employer| %>
+    <li>
+      <%= employer.name %> (<%= employer.email %>)
+      <%= button_to "Unassign", 
+          "#{task_employers_path(@task)}/#{employer.id}",
+          method: :delete,
+          form: { data: { turbo_confirm: "Unassign #{employer.name}?" } } %>
+    </li>
+  <% end %>
+</ul>
+
+<h3>Assign employer</h3>
+<%= form_with url: task_employers_path(@task), method: :post do |f| %>
+  <div>
+    <label for="employer_id">Employer ID</label>
+    <%= number_field_tag :employer_id %>
+  </div>
+  <%= f.submit "Assign" %>
+<% end %>
+
+<p><%= link_to "Back to Task", task_path(@task) %></p>
+
+
