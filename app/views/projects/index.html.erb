@@ -4,24 +4,25 @@
 </div>
 <table>
     
-    <thead>projects</th>
+    <thead>projects</thead>
     <tr>
         <th>name</th>
-         <th>description</th>
-          <th>start date</th>
-           <th>end date</th>
-            <th>status</th>
+        <th>description</th>
+        <th>start date</th>
+        <th>end date</th>
+        <th>status</th>
         </tr>
         <% @project.each do |project|%>
     <tr>
-        <td><h4><%=project.name%></h4></td>
-        <td><%=project.description%></td>
-        <td><%=project.start_date%></td>
-        <td><%=project.end_date%></td>
-        <td><%=project.status%></td>
+        <td><h4><%= project.name %></h4></td>
+        <td><%= project.description %></td>
+        <td><%= project.start_date %></td>
+        <td><%= project.end_date %></td>
+        <td><%= project.status.humanize %></td>
+        <td><%= link_to "view project", project_path(project) %></td>
     </tr>
-    <%end%>
-</table>
+    <% end %>
+    </table>
 
 <p><%= link_to "new project", new_project_path %></p>
 
