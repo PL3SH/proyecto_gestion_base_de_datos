@@ -5,7 +5,7 @@ class TasksController < ApplicationController
   end
 
   def show
-    @task = set_tasks
+    @task = set_task
   end
 
    def new
@@ -23,9 +23,20 @@ class TasksController < ApplicationController
     end
   end
   
-  def update
-    @project = Project.find(params[:project_id])
+  def edit
     @task = set_task
+    @project =  Project.find(params[:project_id])
+  end
+  
+  def destroy
+    @project = Project.find(params[:project_id])
+    @task.destroy
+    redirect_to projects_tasks_path(@project)
+  end
+  
+  def update
+    @task = set_task
+    @project = Project.find(params[:project_id])
     if @task.update(task_params)
       redirect_to project_task_path(@task), notice: "task updated"
     else
@@ -34,9 +45,8 @@ class TasksController < ApplicationController
   end
   
   def destroy
-    @task = set_tasks
     @task.destroy
-    redirect_to projects_tasks_path(@project), notice: "Task deleted"
+    redirect_to project_tasks_path(@project), notice: "Task deleted"
   end
   
   def change_priority
@@ -49,13 +59,24 @@ class TasksController < ApplicationController
       flash.now[:alert] = e.message
       render :show,  status: :unprocessable_entity 
   end
+  
+  def change_status
+    priority = params[:status]
+    @project = Project.find(params[:project_id])
+    @task = set_task
+    @task.update(status: status)
+    redirect_to  project_task_path(@project,@task), notice: "Status actualizado con exito"
+   rescue => e
+      flash.now[:alert] = e.message
+      render :show,  status: :unprocessable_entity 
+  end
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :due_date, :priority)
+    params.require(:task).permit(:name, :description, :due_date, :priority,:status)
   end
   
-  def set_tasks
+  def set_task
     Task.find(params[:id])
   end
 

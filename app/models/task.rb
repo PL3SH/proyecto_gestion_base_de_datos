@@ -8,5 +8,5 @@ class Task < ApplicationRecord
   
   validates :name, presence: true, length: { minimum: 10, maximum: 300 }
   validates :description, presence: true
-  validates :due_date, comparison: { greater_than_or_equal_to: ->(rec) { Date.current } }, allow_nil: true
+  validates :due_date, comparison: { greater_than_or_equal_to: ->(rec) { Date.current } }, allow_nil: true, on: :create
 end
