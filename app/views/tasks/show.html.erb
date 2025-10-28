@@ -19,11 +19,11 @@
       </div>
       <% end %>
       <p>change status of this task</p>
-        <%= form_with url: change_priority_project_task_path(@task.project, @task),  method: :patch do |f| %>
+        <%= form_with url: change_status_project_task_path(@task.project, @task),  method: :patch do |f| %>
          <div>
-          <%= f.label :priority %>
-          <%= f.select :priority, Task.priorities.keys.map  {|k| [k.humanize, k]}, selected: @task.priority %>
-          <%= f.submit "Update priority" %>
+          <%= f.label :status %>
+          <%= f.select :status, Task.statuses.keys.map  {|k| [k.humanize, k]}, selected: @task.status %>
+          <%= f.submit "Update status" %>
         </div>
         <% end %>
         <p>Delete this task</p>

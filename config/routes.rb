@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :tasks do
       member do
         patch :change_priority
+        patch :change_status
       end
 
       # Employers assigned to a task
