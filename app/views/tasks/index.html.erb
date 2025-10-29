@@ -1,0 +1,31 @@
+<h1>Tasks</h1>
+<div >
+
+</div>
+<table>
+    
+    <thead>Task</thead>
+    <tr>
+        <th>name</th>
+        <th>description</th>
+        <th>due date</th>
+        <th>priority</th>
+        <th>status</th>
+        <th>project assigned</th>
+        </tr>
+        <% @tasks.each do |task| %>
+    <tr>
+        <td><h4><%= task.name %></h4></td>
+        <td><%= task.description %></td>
+        <td><%= task.due_date %></td>
+        <td><%= task.priority.humanize %></td>
+        <td><%= task.status.humanize %></td>
+        <td><%= task.project.name %></td>
+        
+    </tr>
+    <% end %>
+    </table>
+
+
+
+

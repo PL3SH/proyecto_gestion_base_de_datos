@@ -1,11 +1,16 @@
 class TasksController < ApplicationController
-  # Minimal show for HTML redirects
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :change_priority, :change_status]
+  before_action :set_project, only: [:new, :show, :edit, :update, :destroy, :change_priority, :change_status]
+ 
+  def index
+    @tasks = Task.all
+  end
+
   def show
-    @task = Task.find(params[:id])
+    @task
   end
 
    def new
-    @project = Project.find(params[:project_id])
     @task = @project.tasks.new
   end
 
@@ -13,44 +18,66 @@ class TasksController < ApplicationController
     @project = Project.find(params[:project_id])
     @task = @project.tasks.new(task_params)
     if @task.save
-      redirect_to task_path(@task), notice: "Task created"
+      redirect_to project_tasks_path(@project), notice: "Task created"
     else
       render :new, status: :unprocessable_entity
     end
   end
+  
+  def edit
+    @project
+  end
+  
+  def destroy
+    @task.destroy
+    redirect_to projects_tasks_path(@project), notice: "Tarea eliminada correctamente"
+  end
+  
+  def update
 
-  def start    ; update_status(:in_progress) ; end
-  def pause    ; update_status(:paused)      ; end
-  def review   ; update_status(:under_review); end
-  def cancel   ; update_status(:cancelled)   ; end
-  def complete ; update_status(:completed)   ; end
-
-  def prioritize_normal     ; update_priority(:normal)     ; end
-  def prioritize_irrelevant ; update_priority(:irrelevant) ; end
-  def prioritize_important  ; update_priority(:important)  ; end
-  def prioritize_critical   ; update_priority(:critical)   ; end
-
+    if @task.update(task_params)
+      redirect_to project_task_path(@task), notice: "task updated"
+    else
+      redirect_back fallback_location: project_tasks_path(@task), alert: @task.full_messages.to_sentence
+    end
+  end
+  
+  def destroy
+    @task.destroy
+    redirect_to project_tasks_path(@project)
+  end
+  
+  def change_priority
+    priority = params[:priority]
+    @task.update(priority: priority)
+    redirect_to  project_task_path(@project,@task), notice: "Priority actualizado con exito"
+   rescue => e
+      flash.now[:alert] = e.message
+      render :show,  status: :unprocessable_entity 
+  end
+  
+  def change_status
+    status = params[:status]
+    @task.update(status: status)
+    redirect_to  project_task_path(@project,@task), notice: "Status actualizado con exito"
+  rescue => e
+     flash.now[:alert] = e.message
+     render :show,  status: :unprocessable_entity 
+  end
+  
+  
+  
   private
 
   def task_params
-    params.require(:task).permit(:name, :description, :due_date, :priority)
+    params.require(:task).permit(:name, :description, :due_date, :priority, :status)
   end
-
-  def update_status(target)
-    task = Task.find(params[:id])
-    if task.update(status: target)
-      redirect_to task_path(task), notice: "Task updated"
-    else
-      redirect_back fallback_location: task_path(task), alert: task.errors.full_messages.to_sentence
-    end
+  
+  def set_task
+    @task = Task.find(params[:id])
   end
-
-  def update_priority(target)
-    task = Task.find(params[:id])
-    if task.update(priority: target)
-      redirect_to task_path(task), notice: "Priority updated"
-    else
-      redirect_back fallback_location: task_path(task), alert: task.errors.full_messages.to_sentence
-    end
+  def set_project
+    @project = Project.find(params[:project_id])
   end
+  
 end

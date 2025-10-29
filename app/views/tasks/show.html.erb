@@ -2,26 +2,35 @@
 <p><strong>Description:</strong> <%= @task.description %></p>
 <p><strong>Status:</strong> <%= @task.status %></p>
 <p><strong>Priority:</strong> <%= @task.priority %></p>
-<p><strong>Due date:</strong> <%= @task.due_date %></p>
+<p><strong>Due date:</strong> <%= @task.due_date.strftime("%B %d, %Y") %></p>
 <p><strong>Project:</strong> <%= link_to @task.project.name, project_path(@task.project) %></p>
-
 <h2>Employers</h2>
-<p><%= link_to "View assigned employers", task_employers_path(@task) %></p>
+
 
 <h3>Actions</h3>
-<div>
-  <%= button_to "Start", start_task_path(@task), method: :patch %>
-  <%= button_to "Pause", pause_task_path(@task), method: :patch %>
-  <%= button_to "Review", review_task_path(@task), method: :patch %>
-  <%= button_to "Cancel", cancel_task_path(@task), method: :patch %>
-  <%= button_to "Complete", complete_task_path(@task), method: :patch %>
-</div>
+    <p>Edit this task</p>
+    <%= button_to "edit task",  edit_project_task_path(@task.project,@task), method: :get %>
+    <p>change priority of this task</p>
+      <%= form_with url: change_priority_project_task_path(@task.project, @task),  method: :patch do |f| %>
+       <div>
+        <%= f.label :priority %>
+        <%= f.select :priority, Task.priorities.keys.map  {|k| [k.humanize, k]}, selected: @task.priority %>
+        <%= f.submit "Update priority" %>
+      </div>
+      <% end %>
+      <p>change status of this task</p>
+        <%= form_with url: change_status_project_task_path(@task.project, @task),  method: :patch do |f| %>
+         <div>
+          <%= f.label :status %>
+          <%= f.select :status, Task.statuses.keys.map  {|k| [k.humanize, k]}, selected: @task.status %>
+          <%= f.submit "Update status" %>
+        </div>
+        <% end %>
+        <p>Delete this task</p>
+        <p> <%= link_to "Delete Task", project_task_path(@task.project,@task), data: { turbo_method: :delete } %></p>
 
 <div>
-  <%= button_to "Priority: Normal", prioritize_normal_task_path(@task), method: :patch %>
-  <%= button_to "Priority: Irrelevant", prioritize_irrelevant_task_path(@task), method: :patch %>
-  <%= button_to "Priority: Important", prioritize_important_task_path(@task), method: :patch %>
-  <%= button_to "Priority: Critical", prioritize_critical_task_path(@task), method: :patch %>
+ <p> <%= link_to "back to all tasks", project_tasks_path(@task.project) %></p>
 </div>
 
 
