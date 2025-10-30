@@ -12,6 +12,7 @@
         <th>priority</th>
         <th>status</th>
         <th>project assigned</th>
+        <th>details</th>
         </tr>
         <% @tasks.each do |task| %>
     <tr>
@@ -21,11 +22,14 @@
         <td><%= task.priority.humanize %></td>
         <td><%= task.status.humanize %></td>
         <td><%= task.project.name %></td>
+        <td> <%= link_to "View task", project_task_path(task.project_id,task) %></td>
         
     </tr>
+    <p> <%= link_to "back to project", project_path(task.project_id) %></p>
     <% end %>
     </table>
 
+     
 
 
 
