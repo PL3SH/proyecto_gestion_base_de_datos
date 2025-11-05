@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+    before_action :authenticate_user!
     before_action :set_project, only: %i[ show edit update destroy ]
   def index
     @project = Project.all 
@@ -23,7 +24,7 @@ def update
   end
 end
   def create
-    @project = Project.new(project_params)
+    @project = current_user.projects.new(project_params)
     if @project.save
       redirect_to project_path(@project), notice: "Project created"
     else
@@ -61,7 +62,7 @@ end
     end
   end
   def set_project
-   @project = Project.find(params[:id])
+   @project = current_user.projects.find(params[:id])
   end
 
 end

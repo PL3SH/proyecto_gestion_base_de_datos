@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -22,13 +23,6 @@ Rails.application.routes.draw do
         patch :change_priority
         patch :change_status
       end
-
-      # Employers assigned to a task
-      get "employers", to: "tasks/employers#index"
-      post "employers", to: "tasks/assignments#create"
-      delete "employers/:employer_id", to: "tasks/assignments#destroy"
     end
   end
-
-  resources :employers
 end
